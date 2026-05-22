@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 import base64
 from fastapi import FastAPI, UploadFile, File, Query, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List, Optional
 from src.pipeline import DeepfakePipeline
@@ -12,6 +13,14 @@ app = FastAPI(
     version="1.0.0"
 )
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"], # In production, replace "*" with your frontend's actual URL
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 # loading the model ones when the server starts
 print("Loading model pipeline...")
 try:
@@ -20,6 +29,13 @@ try:
 except Exception as e:
     print(f"CRITICAL ERROR: Failed to load pipeline: {e}")
     pipeline = None
+
+@app.get("/health")
+async def health_check():
+    """Cloud load balancers ping this endpoint to ensure the server is alive."""
+    if pipeline is None:
+        raise HTTPException(status_code=503, detail="Service Unavailable: Model failed to load.")
+    return {"status": "healthy", "model_loaded": True}
 
 # defining strict schemas for the api response
 class FaceResult(BaseModel):
