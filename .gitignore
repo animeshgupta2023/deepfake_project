@@ -4,3 +4,7 @@ models/weights/
 *.h5
 *.pkl
 *.onnx
+output_face_1.jpg
+src/__pycache__/
+test_image.jpg
+test_run.py
