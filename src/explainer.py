@@ -12,28 +12,28 @@ class ViTExplainer:
         self.attentions = []
         self._orig_forwards = []
 
-        def _patch_blocks(self):
-            self._orig_forwards.clear()
-            self.attentions.clear()
+    def _patch_blocks(self): 
+        self._orig_forwards.clear()
+        self.attentions.clear()
 
-            for block in self.model.blocks:
-                attn = block.attn
-                self._orig_forwards.append(attn.forward)
+        for block in self.model.blocks:
+            attn = block.attn
+            self._orig_forwards.append(attn.forward)
 
-                def make_patched(m, store):
-                    def patched(x, **kwargs):
-                        B, N, C = x.shape
-                        hd = C // m.num_heads 
-                        qkv = m.qkv(x).reshape(B, N, 3, m.num_heads, hd).permute(2, 0, 3, 1, 4)
-                        q, k, v = qkv.unbind(0)
-                        dots = (q @ k.transpose(-2, -1)) * m.scale
-                        dots = dots.softmax(dim=-1)
-                        store.append(dots.detach().cpu()) # Store the attention weights
-                        out = (m.attn_drop(dots) @ v).transpose(1, 2).reshape(B, N, C)
-                        return m.proj_drop(m.proj(out))
-                    return patched
-                
-                attn.forward = make_patched(attn, self.attentions)
+            def make_patched(m, store):
+                def patched(x, **kwargs):
+                    B, N, C = x.shape
+                    hd = C // m.num_heads 
+                    qkv = m.qkv(x).reshape(B, N, 3, m.num_heads, hd).permute(2, 0, 3, 1, 4)
+                    q, k, v = qkv.unbind(0)
+                    dots = (q @ k.transpose(-2, -1)) * m.scale
+                    dots = dots.softmax(dim=-1)
+                    store.append(dots.detach().cpu()) # Store the attention weights
+                    out = (m.attn_drop(dots) @ v).transpose(1, 2).reshape(B, N, C)
+                    return m.proj_drop(m.proj(out))
+                return patched
+            
+            attn.forward = make_patched(attn, self.attentions)
 
     def _restore_blocks(self):
         for block, orig in zip(self.model.blocks, self._orig_forwards):

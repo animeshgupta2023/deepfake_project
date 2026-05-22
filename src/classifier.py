@@ -5,6 +5,7 @@ import logging
 from PIL import Image
 from torchvision import transforms
 from typing import Tuple
+import numpy as np 
 
 class DeepfakeClassifier:
     ''' Classifies the image if fake or real '''
@@ -28,16 +29,17 @@ class DeepfakeClassifier:
             transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
         ])
 
-    def predict(self, face_tensor):
-        face_rgb = cv2.cvtColor(face_tensor, cv2.COLOR_BGR2RGB)
+    def preprocess(self, face_crop: np.ndarray) -> torch.Tensor:
+        face_rgb = cv2.cvtColor(face_crop, cv2.COLOR_BGR2RGB)
         pil_image = Image.fromarray(face_rgb)
-        input_tensor = self.transform(pil_image).unsqueeze(0).to(self.device)
+        return self.transform(pil_image).unsqueeze(0).to(self.device)
 
+    def predict(self, input_tensor: torch.Tensor) -> Tuple[int, float]:
         with torch.no_grad():
             output = self.model(input_tensor)
             probs = torch.softmax(output, dim=1)
-
+            
         pred_class = torch.argmax(probs, dim=1).item() 
         confidence = probs[0][pred_class].item()
-
-        return pred_class, confidence
+        
+        return pred_class, float(confidence)
