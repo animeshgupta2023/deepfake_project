@@ -1,0 +1,18 @@
+# Machine Learning Core
+torch>=2.0.0
+torchvision
+timm
+opencv-python-headless  # Headless is better for servers (no GUI dependencies)
+numpy
+Pillow
+
+# Backend API
+fastapi
+uvicorn
+python-multipart
+pydantic
+PyYAML
+
+# Frontend
+streamlit
+requests
