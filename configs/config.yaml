@@ -1,0 +1,9 @@
+model:
+  name: "vit_small_patch16_224"
+  weights_path: "models/weights/vit_small.pth"
+  device: "cuda"
+
+detector:
+  prototxt: "models/weights/deploy.prototxt"
+  caffemodel: "models/weights/res10_300x300_ssd_iter_140000.caffemodel"
+  confidence_threshold: 0.6
