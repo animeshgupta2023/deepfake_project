@@ -11,7 +11,7 @@ A full-stack, end-to-end deepfake detection microservice powered by a custom Vis
 ## ⚙️ How to Run Locally
 1. Clone the repository: `git clone https://github.com/YOUR_USERNAME/deepfake_project.git`
 2. Install dependencies: `pip install -r requirements.txt`
-3. Download the model weights and place them in `models/weights/` (See `configs/config.yaml` for expected paths).
+3. Download the model weights (https://drive.google.com/drive/folders/1SFeP4Uu9NY1o3Izr3ySBXLSPCclfxiXo?usp=sharing) and place them in `models/weights/` (See `configs/config.yaml` for expected paths).
 4. Start the backend API: `uvicorn src.api:app --reload`
 5. Start the frontend UI: `streamlit run frontend/app.py`
 

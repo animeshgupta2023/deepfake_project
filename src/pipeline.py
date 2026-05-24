@@ -2,6 +2,7 @@ import yaml
 import cv2
 import numpy as np
 from typing import List, Dict
+import torch
 
 from src.face_extractor import FaceExtractor
 from src.classifier import DeepfakeClassifier
@@ -11,6 +12,9 @@ class DeepfakePipeline:
     def __init__(self, config_path: str = "configs/config.yaml"):
         with open(config_path, "r") as file:
             self.config = yaml.safe_load(file)
+
+        if self.config["model"]["device"] == "auto":
+            self.config["model"]["device"] = "cuda" if torch.cuda.is_available() else "cpu"
 
         self.extractor = FaceExtractor(
             prototxt_path=self.config['detector']['prototxt'],

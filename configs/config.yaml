@@ -1,7 +1,7 @@
 model:
   name: "vit_small_patch16_224"
   weights_path: "models/weights/vit_small.pth"
-  device: "cuda"
+  device: "auto"
 
 detector:
   prototxt: "models/weights/deploy.prototxt"
