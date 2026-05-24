@@ -1,0 +1,8 @@
+venv/
+deepfake/
+models/weights/
+__pycache__/
+.git/
+.github/
+test_image.jpg
+test_run.py

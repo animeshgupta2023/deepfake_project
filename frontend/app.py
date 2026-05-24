@@ -5,7 +5,8 @@ import io
 from PIL import Image
 
 # --- Configuration ---
-API_URL = "http://127.0.0.1:8000/predict"
+#API_URL = "http://127.0.0.1:8000/predict"
+API_URL = "https://animeshgupta2022-deepfake-api.hf.space/predict"
 MAX_FILE_SIZE_MB = 5 # Prevent server crashes from massive files
 
 # --- Page Layout ---

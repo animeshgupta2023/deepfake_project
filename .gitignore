@@ -1,13 +1,41 @@
-models/
+# 1. Virtual Environments (Crucial for build speed)
+deepfake/
+venv/
+env/
+
+# 2. Python Caches & Testing Data
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# 3. Git & CI/CD (Docker doesn't need your version history)
+.git/
+.github/
+.gitignore
+
+# 4. Local Test Scripts & Output Images
+test_run.py
+test_image.jpg
+output_face_*.jpg
+tests/
+
+# 5. Heavy Model Weights (Prevents massive 500MB+ uploads during build)
 models/weights/
 *.pt
+*.pth
 *.h5
 *.pkl
 *.onnx
-output_face_1.jpg
-src/__pycache__/
-test_image.jpg
-test_run.py
-deepfake/
-models/weights/
-__pycache__/
+
+# 6. The Frontend! 
+# (Since this Dockerfile only runs uvicorn/FastAPI, it doesn't need Streamlit)
+frontend/
+
+# 7. IDE & System Files
+.vscode/
+.idea/
+.DS_Store
+
+# 8. Environment Secrets (Security best practice)
+.env
