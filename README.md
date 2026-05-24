@@ -19,4 +19,4 @@ A full-stack, end-to-end deepfake detection microservice powered by a custom Vis
 To run the containerized backend:
 ```bash
 docker build -t deepfake-api .
-docker run -p 8000:8000 deepfake-api
+docker run -p 8000:8000 -v "${PWD}/models/weights:/app/models/weights" deepfake-api
