@@ -32,4 +32,4 @@ jobs:
     # 4. Runs your tests!
     - name: Run Pytest
       run: |
-        pytest tests/
+        python -m pytest tests/
