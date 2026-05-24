@@ -1,4 +1,3 @@
-import numpy as np
 import torch
 import timm
 from unittest.mock import patch
@@ -6,12 +5,9 @@ from src.classifier import DeepfakeClassifier
 
 @patch('torch.load')
 def test_classifier_predict_formats(mock_torch_load):
-    # 1. Setup the Mock
-    # Create a fresh, untrained ViT model in memory and extract its random weights
+    # 1. Setup the Mock with random weights
     dummy_model = timm.create_model('vit_small_patch16_224', pretrained=False, num_classes=2)
     dummy_state_dict = dummy_model.state_dict()
-    
-    # Tell torch.load to return these random weights instead of reading a file
     mock_torch_load.return_value = dummy_state_dict
 
     # 2. Initialize the Classifier
@@ -21,11 +17,11 @@ def test_classifier_predict_formats(mock_torch_load):
         device="cpu"
     )
 
-    # 3. Create a dummy cropped face (e.g., 150x150 pixels from OpenCV)
-    dummy_face_crop = np.zeros((150, 150, 3), dtype=np.uint8)
+    # 3. Create a dummy PyTorch Tensor (Batch=1, Channels=3, 224x224 pixels)
+    dummy_tensor = torch.randn(1, 3, 224, 224)
 
     # 4. Run the pipeline
-    pred_class, confidence = classifier.predict(dummy_face_crop)
+    pred_class, confidence = classifier.predict(dummy_tensor)
 
     # 5. Assertions
     assert isinstance(pred_class, int), "Prediction class should be an integer."
