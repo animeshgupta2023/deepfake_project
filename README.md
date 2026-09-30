@@ -144,8 +144,18 @@ The backend returns a JSON object like:
 
 This repo includes a Dockerfile that runs the FastAPI app inside a container.
 
+For local development, the app runs on port `8000`. The Docker image exposes `7860` and serves the API there.
+
 Build the image:
 
 ```bash
 docker build -t deepfake-api .
-docker run -p 8000:8000 deepfake-api
+```
+
+Run it:
+
+```bash
+docker run -p 7860:7860 deepfake-api
+```
+
+This exposes the API on port `7860` inside Docker, which maps to your host machine at `http://localhost:7860`.
