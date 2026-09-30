@@ -5,8 +5,8 @@ import io
 from PIL import Image
 
 # --- Configuration ---
-#API_URL = "http://127.0.0.1:8000/predict"
-API_URL = "https://animeshgupta2022-deepfake-api.hf.space/predict"
+API_URL = "http://127.0.0.1:8000/predict"
+#API_URL = "https://animeshgupta2022-deepfake-api.hf.space/predict"
 MAX_FILE_SIZE_MB = 5 # Prevent server crashes from massive files
 
 # --- Page Layout ---
@@ -18,8 +18,9 @@ st.markdown("Upload an image to detect if the faces are **Real** or **Fake** usi
 st.sidebar.header("Controls")
 explain_mode = st.sidebar.checkbox("Generate Attention Heatmaps", value=True, 
                                    help="Shows exactly what the AI is looking at.")
-uploaded_file = st.sidebar.file_uploader("Upload an image...", type=["jpg", "jpeg", "png", "avif"])
-
+uploaded_file = st.sidebar.file_uploader(
+    "Upload an image...", type=["jpg", "jpeg", "png", "webp", "bmp", "tiff", "avif"]
+)
 # --- Main Application Logic ---
 if uploaded_file is not None:
     # 1. File Size Validation

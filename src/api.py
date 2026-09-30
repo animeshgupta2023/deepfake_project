@@ -6,6 +6,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List, Optional
 from src.pipeline import DeepfakePipeline
+from PIL import Image
+import io
 
 app = FastAPI(
     title="Deepfake Detection API", 
@@ -15,7 +17,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # In production, replace "*" with your frontend's actual URL
+    allow_origins=["*"], # In production,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -70,8 +72,16 @@ async def predict(
 
     # Read the uploaded file bytes into an OpenCV array
     contents = await file.read()
-    nparr = np.frombuffer(contents, np.uint8)
-    img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+    try:
+        pil_img = Image.open(io.BytesIO(contents)).convert("RGB")  # ensures 3‑channel
+    except Exception:
+        raise HTTPException(status_code=400, detail="Unsupported or corrupt image file.")
+
+    # Convert to BGR NumPy array (OpenCV’s default format)
+    img = np.array(pil_img)[:, :, ::-1].copy()   # RGB -> BGR
+    
+    #nparr = np.frombuffer(contents, np.uint8)
+    #img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
     if img is None:
         raise HTTPException(status_code=400, detail="Could not read the provided image file.")
