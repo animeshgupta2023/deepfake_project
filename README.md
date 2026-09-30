@@ -148,44 +148,4 @@ Build the image:
 
 ```bash
 docker build -t deepfake-api .
-```
-
-Run it:
-
-```bash
-docker run -p 7860:7860 deepfake-api
-```
-
-The container serves the API on port `7860`.
-
-## Testing
-
-You can run the included unit tests with:
-
-```bash
-pytest
-```
-
-## Notes
-
-- The classifier uses the model name `vit_small_patch16_224` as defined in `configs/config.yaml`.
-- The face detector uses a Caffe SSD model and returns bounding boxes above a configurable confidence threshold.
-- If no face is detected, the pipeline returns an empty result list.
-- The heatmap option is helpful for diagnosing what regions of an image the model focused on.
-
-## Typical workflow
-
-1. Activate the virtual environment.
-2. Install project dependencies.
-3. Ensure the three weight files are present.
-4. Launch the backend with `uvicorn`.
-5. Launch the Streamlit app.
-6. Upload an image and analyze it.
-
-## Troubleshooting
-
-- If the backend fails to start, verify that `configs/config.yaml` points to valid model files.
-- If the app cannot connect to the API, make sure the FastAPI server is running on port `8000`.
-- If the model memory usage is high, reduce image size or run on a machine with adequate GPU/CPU resources.
-- If you see no detections, try a higher-quality image with clearer visible faces.
-
+docker run -p 8000:8000 deepfake-api
